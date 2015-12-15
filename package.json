@@ -6,7 +6,6 @@
     "start": "babel src --out-dir app  && node app/bin/www.js"
   },
   "devDependencies": {
-    "babel": "^6.3.13",
     "babel-cli": "^6.2.0",
     "babel-plugin-transform-flow-strip-types": "^6.3.13",
     "babel-preset-es2015-node5": "^1.1.1",
@@ -22,6 +21,7 @@
     "express-jwt": "^3.3.0",
     "express-validator": "^2.18.0",
     "jsonwebtoken": "^5.4.1",
+    "mongoose": "^4.3.1",
     "morgan": "^1.6.1",
     "multer": "^1.1.0",
     "passport": "^0.3.2",

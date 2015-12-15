@@ -1,6 +1,5 @@
 import express from 'express';
 import logger from 'morgan';
-import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import passport from 'passport';
@@ -15,7 +14,6 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(expressJwt({ secret: 'secret' }).unless({ path: ['/v1/login', '/v1/signup'] }));
 
 app.use((err, req, res, next) => {
