@@ -2,10 +2,8 @@ import express from 'express';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-import passport from 'passport';
 import expressValidator from 'express-validator';
-import * as routes from './routes.js';
-import * as configPassport from './config/passport';
+import { routes } from './routes.js';
 import expressJwt from 'express-jwt';
 
 const app = express();
@@ -14,8 +12,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(expressJwt({ secret: 'secret' }).unless({ path: ['/v1/login', '/v1/signup'] }));
-
+app.use(expressJwt({ secret: 'secret' }).unless({ path: [{ url: '/v1/user', methods: ['POST'] }, { url: '/v1/login' }] }));
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
     return res.status(401).json({ error: [{ msg: 'invalid credentials' }] });
@@ -23,18 +20,7 @@ app.use((err, req, res, next) => {
   next();
 });
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-configPassport.serializeUser(passport);
-configPassport.deserializeUser(passport);
-configPassport.localSignup(passport);
-configPassport.localLogin(passport);
-
-routes.profile(app);
-routes.signup(app, passport);
-routes.login(app, passport);
-routes.logout(app);
+routes(app);
 // connect to our database
 mongoose.connect('mongodb://heroku_gwv8r7fv:peavcuum1ue6h47fmo4b7mltoc@ds033175.mongolab.com:33175/heroku_gwv8r7fv');
 
