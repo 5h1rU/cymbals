@@ -36,7 +36,7 @@ routes.signup(app, passport);
 routes.login(app, passport);
 routes.logout(app);
 // connect to our database
-mongoose.connect('mongodb://localhost:27017');
+mongoose.connect('mongodb://heroku_gwv8r7fv:peavcuum1ue6h47fmo4b7mltoc@ds033175.mongolab.com:33175/heroku_gwv8r7fv');
 
 
 // catch 404 and forward to error handler
