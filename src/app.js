@@ -12,7 +12,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(expressJwt({ secret: 'secret' }).unless({ path: [{ url: '/v1/user', methods: ['POST'] }, { url: '/v1/login' }] }));
+app.use(expressJwt({ secret: 'secret' }).unless({ path: [{ url: '/v1/users', methods: ['POST'] }, { url: '/v1/login' }] }));
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
     return res.status(401).json({ error: [{ msg: 'invalid credentials' }] });

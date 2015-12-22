@@ -1,8 +1,8 @@
-import jwt from 'jsonwebtoken';
 import User from '../models/user';
+import { jwtSign } from '../config/jwt';
 
 export function userPost(app) {
-  app.post('/v1/user', (req, res) => {
+  app.post('/v1/users', (req, res) => {
     const newUser = new User();
 
     newUser.first_name = req.body.first_name;
@@ -27,19 +27,35 @@ export function userPost(app) {
         return res.status(400).json({ error: errors });
       }
 
-      const token = jwt.sign(user, 'secret');
-      return res.status(200).json({ token });
+      return res.status(201).json({ token: jwtSign(user) });
     });
   });
 }
 
 export function userGet(app) {
-  app.get('/v1/user', (req, res) => res.json({ user: req.user }));
+  app.get('/v1/users/:id', (req, res) => {
+    const id = req.params.id;
+    if (req.params.id === 'me') {
+      User.findOne({ _id: req.user.id }, (err, user) => {
+        if (err) { throw err; }
+        return res.status(200).json({ user });
+      });
+    } else {
+      User.findOne({ _id: id }, (err, user) => {
+        if (err) { throw err; }
+        return res.status(200).json({ user });
+      });
+    }
+  });
 }
 
 export function userUpdate(app) {
-  app.put('/v1/user', (req, res) => {
-    return User.findByIdAndUpdate(req.user._id, { first_name: req.body.first_name }, (err, user) => {
+  app.put('/v1/users/:id', (req, res) => {
+    if (req.params.id !== req.user.id) {
+      return res.status(401).json({ error: [{ msg: 'Unauthorized' }] });
+    }
+
+    User.findByIdAndUpdate(req.user.id, { first_name: req.body.first_name }, (err, user) => {
       if (err) { throw err; }
       return res.status(200).json({ user });
     });

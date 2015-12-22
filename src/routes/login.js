@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import { jwtSign } from '../config/jwt';
 import User from '../models/user';
 
 export function login(app) {
@@ -20,8 +20,7 @@ export function login(app) {
       if (!user || !user.validPassword(req.body.password)) {
         return res.status(401).json({ error: [{ msg: 'invalid user or password' }] });
       }
-      const token = jwt.sign(user, 'secret');
-      return res.status(200).json({ token });
+      return res.status(200).json({ token: jwtSign(user) });
     });
   });
 }
